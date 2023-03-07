@@ -17,7 +17,7 @@ export class GifsSearchComponent implements OnInit {
   buscar(termino: string){
     const valor = this.txtBuscar.nativeElement.value;
     if (valor.trim().length == 0) { return }
-    this.gifsService.buscarGifs(valor);
+    this.gifsService.buscarGifs(valor, false);
     this.txtBuscar.nativeElement.value = '';
   }
 

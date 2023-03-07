@@ -12,23 +12,34 @@ export class GifsService {
   private api_key = "rZLlHqTRLSEl6m9730mJbumvl0mJmjx3";
 
   constructor(private http: HttpClient) {
-    this._historial = JSON.parse(localStorage.getItem('historial')!) || [] 
-    this.resultados = JSON.parse(localStorage.getItem('resultados')!) || [] 
+    this._historial = this.historicLocalStorage;
+    this.resultados = this.gifsLocalStorage;
    }
 
-  get historial(){
-    
+  get historial(){    
     return [...this._historial]
   } 
+
+  get gifsLocalStorage():Gif[]{
+    return JSON.parse(localStorage.getItem('resultados')!) || [] 
+  }
+  get historicLocalStorage():string[]{
+    return JSON.parse(localStorage.getItem('historial')!) || [] 
+  }
   
-  buscarGifs(query:string){
+  buscarGifs(query:string, sidebar:boolean){
 
     query = query.trim().toLocaleLowerCase();
 
     if(!this._historial.includes(query)){
       this._historial.unshift(query)
       this._historial = this._historial.splice(0,8)
-
+      localStorage.setItem('historial', JSON.stringify(this._historial))
+    }else if(sidebar){ 
+      //validation for click in sidebar and send to top the query
+      const index =  this._historial.indexOf(query)
+      this._historial.splice(index,1)
+      this._historial.unshift(query)
       localStorage.setItem('historial', JSON.stringify(this._historial))
     }
     const params = new HttpParams() 
